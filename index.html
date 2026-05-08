@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Ilman 🎉</title>
+    <meta name="description" content="Ucapan Ulang Tahun Spesial untuk Ilman">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --primary-bg: #0a0a0c;
+            --accent-blue: #007aff;
+            --accent-glow: rgba(0, 122, 255, 0.5);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--primary-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 10px; }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--primary-bg);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-circle {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--glass-border);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Background Particles */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Header Section */
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* Countdown */
+        .countdown-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .count-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .count-val {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .count-label {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+        }
+
+        /* Wishes Section */
+        .wish-text {
+            font-style: italic;
+            font-weight: 300;
+            text-align: center;
+            color: #efefef;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Gallery Slider (Simulated) */
+        .gallery-container {
+            overflow-x: auto;
+            display: flex;
+            gap: 15px;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 10px;
+        }
+
+        .gallery-item {
+            min-width: 80%;
+            height: 350px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            scroll-snap-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #444;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Donation Section */
+        .donation-card {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(0, 0, 0, 0.5));
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.1);
+            text-align: center;
+        }
+
+        .donation-card h3 {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+        }
+
+        .qr-placeholder {
+            width: 180px;
+            height: 180px;
+            background: white;
+            margin: 20px auto;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .copy-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px var(--accent-glow);
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .copy-btn:active { transform: scale(0.95); }
+
+        /* Floating Music Button */
+        .music-toggle {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 122, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            z-index: 2000;
+        }
+
+        .nav-item {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .nav-item.active { color: var(--accent-blue); }
+
+        /* Popup */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .popup-content {
+            background: #151515;
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--text-dim);
+        }
+
+        /* Utils */
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 20px; }
+        .hidden { display: none; }
+
+        /* Grid features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .feature-box {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+        .feature-box i {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .feature-box span {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-circle"></div>
+        <p style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim);">Menyiapkan Kejutan...</p>
+    </div>
+
+    <!-- Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Music Toggle -->
+    <div class="music-toggle" id="musicBtn" onclick="toggleMusic()">
+        <i class="fas fa-music"></i>
+    </div>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active"><i class="fas fa-home"></i></a>
+        <a href="#wish" class="nav-item"><i class="fas fa-heart"></i></a>
+        <a href="#gift" class="nav-item"><i class="fas fa-gift"></i></a>
+        <a href="#" class="nav-item" onclick="openPopup()"><i class="fas fa-comment-dots"></i></a>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Hero Section -->
+        <section class="hero">
+            <p>Spesial Untuk</p>
+            <h1>Happy Birthday Ilman Ganteng 🎉</h1>
+            <p style="font-size: 0.7rem; color: var(--accent-blue); font-weight: 700;">12 Mei 2005</p>
+            
+            <!-- Countdown -->
+            <div class="countdown-container" id="countdown">
+                <div class="count-item">
+                    <span class="count-val" id="days">00</span>
+                    <span class="count-label">Hari</span>
+                </div>
+                <div class="count-item">
+                    <span class="count-val" id="hours">00</span>
+                    <span class="count-label">Jam</span>
+                </div>
+                <div class="count-item">
+                    <span class="count-val" id="minutes">00</span>
+                    <span class="count-label">Menit</span>
+                </div>
+                <div class="count-item">
+                    <span class="count-val" id="seconds">00</span>
+                    <span class="count-label">Detik</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quotes Section -->
+        <section id="wish" class="glass-card">
+            <div class="wish-text" id="typewriter">
+                "Selamat ulang tahun yang ke-19, Ilman. Semoga setiap langkahmu diiringi keberkahan, setiap mimpimu menjadi nyata, dan hari-harimu penuh dengan kebahagiaan yang tak terbatas."
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <div class="gallery-container">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=500&auto=format" alt="Birthday vibe">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1496337589254-7e19d01ced44?w=500&auto=format" alt="Party vibe">
+            </div>
+            <div class="gallery-item">
+                <div style="padding: 20px; text-align: center;">
+                    <i class="fas fa-camera fa-2x mb-2"></i>
+                    <p>Momen Terbaik Ilman</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid mt-2">
+            <div class="feature-box">
+                <i class="fas fa-rocket"></i>
+                <span>Masa Depan Cerah</span>
+            </div>
+            <div class="feature-box">
+                <i class="fas fa-shield-halved"></i>
+                <span>Kesehatan Selalu</span>
+            </div>
+            <div class="feature-box">
+                <i class="fas fa-bolt"></i>
+                <span>Energi Positif</span>
+            </div>
+            <div class="feature-box">
+                <i class="fas fa-crown"></i>
+                <span>Kesuksesan</span>
+            </div>
+        </div>
+
+        <!-- Gift Section -->
+        <section id="gift" class="glass-card donation-card mt-2">
+            <i class="fas fa-gift fa-3x" style="color: var(--accent-blue); margin-bottom: 15px;"></i>
+            <h3>Support & Gift 🎁</h3>
+            <p style="font-size: 0.85rem; color: var(--text-dim);">
+                Jika ingin memberikan hadiah ulang tahun untuk Ilman, bisa melalui iSaku di bawah ini.
+            </p>
+            
+            <!-- QR Code Container -->
+            <div class="qr-placeholder">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=087872921421" alt="QR iSaku" style="width: 100%;">
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-top: 10px;">
+                <p style="font-size: 0.75rem; color: var(--text-dim);">Nomor iSaku</p>
+                <p id="phoneNum" style="font-weight: 700; letter-spacing: 1px; font-size: 1.1rem;">087872921421</p>
+            </div>
+
+            <button class="copy-btn" onclick="copyNumber()">
+                <i class="fas fa-copy"></i> Salin Nomor
+            </button>
+        </section>
+
+        <p class="text-center" style="font-size: 0.7rem; color: var(--text-dim); margin-top: 40px;">
+            Dibuat dengan ❤️ untuk Ilman.
+        </p>
+
+    </div>
+
+    <!-- Popup Ucapan -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <span class="close-popup" onclick="closePopup()"><i class="fas fa-times"></i></span>
+            <h3 style="margin-bottom: 15px;">Kirim Ucapan</h3>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 20px;">Tuliskan pesan terbaikmu untuk Ilman di hari spesial ini.</p>
+            <textarea id="msgArea" style="width:100%; height: 100px; background: #000; border: 1px solid #333; border-radius: 12px; color: white; padding: 10px; font-family: inherit; margin-bottom: 15px;" placeholder="Tulis ucapan..."></textarea>
+            <button class="copy-btn" onclick="sendWhatsApp()">Kirim via WhatsApp</button>
+        </div>
+    </div>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+                startConfetti();
+                // Play music on first interaction
+                document.body.addEventListener('click', () => {
+                    const music = document.getElementById('bgMusic');
+                    if(music.paused) {
+                        // music.play().catch(e => console.log("Autoplay blocked"));
+                    }
+                }, {once: true});
+            }, 2000);
+        });
+
+        // Particle Background
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    speedY: Math.random() * 0.5 - 0.25
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 122, 255, 0.5)';
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if(p.x > canvas.width) p.x = 0;
+                if(p.x < 0) p.x = canvas.width;
+                if(p.y > canvas.height) p.y = 0;
+                if(p.y < 0) p.y = canvas.height;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+        window.onresize = initParticles;
+
+        // Countdown Logic
+        function updateCountdown() {
+            const birthDate = new Date('May 12, 2005 00:00:00').getTime();
+            const now = new Date().getTime();
+            
+            // To get time until next birthday
+            const currentYear = new Date().getFullYear();
+            let nextBday = new Date(`May 12, ${currentYear} 00:00:00`).getTime();
+            if (now > nextBday) {
+                nextBday = new Date(`May 12, ${currentYear + 1} 00:00:00`).getTime();
+            }
+
+            const diff = nextBday - now;
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Music Toggle
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                music.pause();
+                musicBtn.innerHTML = '<i class="fas fa-music"></i>';
+            }
+        }
+
+        // Copy Number
+        function copyNumber() {
+            const num = document.getElementById('phoneNum').innerText;
+            const el = document.createElement('textarea');
+            el.value = num;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+            btn.style.background = '#28a745';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = 'var(--accent-blue)';
+            }, 2000);
+        }
+
+        // Confetti
+        function startConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#007aff', '#ffffff', '#000000']
+            });
+        }
+
+        // Popup Functions
+        function openPopup() {
+            document.getElementById('popup').style.display = 'flex';
+        }
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function sendWhatsApp() {
+            const msg = document.getElementById('msgArea').value;
+            const phone = "6287872921421"; // Target number
+            if(msg.trim() === "") return;
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent("Happy Birthday Ilman! " + msg)}`;
+            window.open(url, '_blank');
+            closePopup();
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Update Nav Active State
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
